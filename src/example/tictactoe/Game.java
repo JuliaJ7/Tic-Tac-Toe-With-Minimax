@@ -33,18 +33,15 @@ public class Game {
     public void run() {
         int currentPlayer = 0;
 
-        for(;;) {
+        GameState state = board.determineState();
+
+        while(state == GameState.GAME_NOT_FINISHED) {
             players[currentPlayer].makeMove(board);
             board.draw();
-            GameState state = board.determineState();
-
-            if (state == GameState.DRAW || state == GameState.X_WINS || state == GameState.O_WINS) {
-                printMessage(state);
-                return;
-            }
-
             currentPlayer = (currentPlayer + 1) % players.length;
+            state = board.determineState();
         }
+        printMessage(state);
     }
 
     private void printMessage(GameState state) {

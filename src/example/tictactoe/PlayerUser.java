@@ -15,22 +15,23 @@ public class PlayerUser extends Player {
         String message;
         Integer[] spot = new Integer[2];
 
-        for(;;) {
-            System.out.print("Enter the coordinates: ");
-            coordinatesInput = scanner.nextLine();
-            message = validateMove(coordinatesInput, board, spot);
+        if (!board.isFull()) {
+            for (; ; ) {
+                System.out.print("Enter the coordinates: ");
+                coordinatesInput = scanner.nextLine();
+                message = validateMove(coordinatesInput, board, spot);
 
-            if (!message.equals("")) {
-                System.out.println(message);
-            } else {
-                board.getAvailable().remove(spot);
-                int i = spot[0];
-                int j = spot[1];
+                if (!message.equals("")) {
+                    System.out.println(message);
+                } else {
+                    int i = spot[0];
+                    int j = spot[1];
 
-                if (board.isAvailable(i, j)) {
-                    board.update(i, j, this.getToken());
+                    if (board.isAvailable(i, j)) {
+                        board.update(i, j, this.getToken());
+                    }
+                    return;
                 }
-                return;
             }
         }
     }

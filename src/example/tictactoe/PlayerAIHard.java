@@ -7,7 +7,7 @@ public class PlayerAIHard extends Player {
 
     @Override
     public void makeMove(GameBoard board) {
-        if (board.getAvailable().size() > 0) {
+        if (!board.isFull()) {
             System.out.println("Making move level \"hard\"");
             Integer[] spot = {0,0};
             int bestScore = -100;
@@ -17,10 +17,8 @@ public class PlayerAIHard extends Player {
                 for (int j = 0; j < 3; j++) {
                     if (board.isAvailable(i, j)) {
                         board.update(i, j, this.getToken());
-                        board.removeFromAvailable(i, j);
                         score = minimax(board, 0, false);
                         board.update(i, j, '_');
-                        board.addToAvailable(i, j);
 
                         if (score > bestScore) {
                             bestScore = score;
@@ -30,7 +28,6 @@ public class PlayerAIHard extends Player {
                     }
                 }
             }
-            board.getAvailable().remove(spot);
             board.update(spot[0], spot[1], this.getToken());
         }
     }
@@ -61,10 +58,8 @@ public class PlayerAIHard extends Player {
                 for (int j = 0; j < 3; j++) {
                     if (board.isAvailable(i, j)) {
                         board.update(i, j, ai);
-                        board.removeFromAvailable(i, j);
                         score = minimax(board, depth + 1, false);
                         board.update(i, j, '_');
-                        board.addToAvailable(i, j);
                         bestScore = Math.max(score, bestScore);
                     }
                 }
@@ -75,10 +70,8 @@ public class PlayerAIHard extends Player {
                 for (int j = 0; j < 3; j++){
                     if (board.isAvailable(i, j)) {
                         board.update(i, j, opponent);
-                        board.removeFromAvailable(i, j);
                         score = minimax(board, depth + 1, true);
                         board.update(i, j, '_');
-                        board.addToAvailable(i, j);
                         bestScore = Math.min(score, bestScore);
                     }
                 }

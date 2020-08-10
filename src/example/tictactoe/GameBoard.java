@@ -8,11 +8,6 @@ public class GameBoard {
     public static final char EMPTY_CELL = '_';
 
     private final char[][] board;
-    private final ArrayList<Integer[]> available;
-
-    public ArrayList<Integer[]> getAvailable() {
-        return available;
-    }
 
     public GameBoard() {
         this.board = new char[][]{
@@ -20,17 +15,20 @@ public class GameBoard {
                 {EMPTY_CELL, EMPTY_CELL, EMPTY_CELL},
                 {EMPTY_CELL, EMPTY_CELL, EMPTY_CELL}
         };
+    }
 
-        this.available = new ArrayList<Integer[]>();
+    public ArrayList<Integer[]> getAvailableSpots() {
+        ArrayList<Integer[]> availableSpots = new ArrayList<Integer[]>();
 
-        for (int i = 0; i < DIMENSION; i++) {
-            for (int j = 0; j< DIMENSION; j++){
-                Integer[] spot = new Integer[2];
-                spot[0] = i;
-                spot[1] = j;
-                available.add(spot);
+        for(int i = 0; i < DIMENSION; i++) {
+            for (int j = 0; j < DIMENSION; j++) {
+                if (board[i][j] == EMPTY_CELL) {
+                    availableSpots.add(new Integer[]{i, j});
+                }
             }
         }
+
+        return availableSpots;
     }
 
     public void update(int i, int j, char token) {
@@ -53,22 +51,6 @@ public class GameBoard {
         return board[i][j] == EMPTY_CELL;
     }
 
-    public void removeFromAvailable(int i, int j) {
-        if (available.size() > 0) {
-            Integer[] spot = new Integer[2];
-            spot[0] = i;
-            spot[1] = j;
-            available.remove(spot);
-        }
-    }
-
-    public void addToAvailable(int i, int j) {
-        Integer[] spot = new Integer[2];
-        spot[0] = i;
-        spot[1] = j;
-        available.add(spot);
-    }
-
     public boolean isFull() {
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++){
@@ -78,15 +60,6 @@ public class GameBoard {
             }
         }
         return true;
-    }
-
-    public boolean isSpotAvailable(Integer[] spot) {
-        for (Integer[] availableSpot : available) {
-            if (Arrays.equals(availableSpot, spot)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean isSpotAvailableWithTwoInARow(Integer[] spot) {
@@ -190,7 +163,7 @@ public class GameBoard {
             return GameState.O_WINS;
         }
 
-        if (available.size() == 0) {
+        if (isFull()) {
             return GameState.DRAW;
         } else {
             return GameState.GAME_NOT_FINISHED;
